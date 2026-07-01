@@ -1,0 +1,9 @@
+.git
+.github
+dump
+data
+Dockerfile
+README.md
+docs
+example
+*.log
