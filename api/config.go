@@ -9,7 +9,7 @@ type Config struct {
 func LoadConfig() Config {
 	addr := os.Getenv("TDX_API_ADDR")
 	if addr == "" {
-		addr = ":8080"
+		addr = ":8181"
 	}
 	return Config{Addr: addr}
 }

@@ -9,6 +9,20 @@ import (
 	"github.com/injoyai/tdx/protocol"
 )
 
+// Kline 获取 K 线
+// @Summary 获取 K 线
+// @Tags 行情
+// @Produce json
+// @Param code query string true "股票代码" example(000001)
+// @Param type query string false "周期，默认 day" Enums(minute, minute5, minute15, minute30, hour, day, week, month, quarter, year)
+// @Param format query string false "返回格式：simple/raw，默认 simple" Enums(simple, raw)
+// @Param adjust query string false "复权：qfq/hfq/none，默认 qfq" Enums(qfq, hfq, none)
+// @Param start query int false "起始偏移，默认 0" minimum(0)
+// @Param count query int false "数量，默认 200，最大 800" minimum(1) maximum(800)
+// @Param from query string false "开始日期，支持 20260701 或 2026-07-01"
+// @Param to query string false "结束日期，支持 20260701 或 2026-07-01"
+// @Success 200 {object} ResponseDoc{data=[]SimpleKlineDoc}
+// @Router /kline [get]
 func (h *Handler) Kline(c *gin.Context) {
 	format, ok := responseFormat(c.DefaultQuery("format", formatSimple))
 	if !ok {

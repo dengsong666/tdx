@@ -2,8 +2,11 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/injoyai/tdx/api/docs"
 	"github.com/injoyai/tdx/api/handler"
 	"github.com/injoyai/tdx/api/middleware"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewRouter(app *App) *gin.Engine {
@@ -12,6 +15,7 @@ func NewRouter(app *App) *gin.Engine {
 		panic(err)
 	}
 	router.Use(middleware.CORS())
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	h := handler.New(app.Client, app.Codes, app.Gbbq, Success, Fail)
 

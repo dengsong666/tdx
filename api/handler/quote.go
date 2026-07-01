@@ -6,6 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Quote 获取五档行情
+// @Summary 获取五档行情
+// @Tags 行情
+// @Produce json
+// @Param code query string true "股票代码，多个用逗号分隔" example(000001,600519)
+// @Param format query string false "返回格式：simple/raw，默认 simple" Enums(simple, raw)
+// @Success 200 {object} ResponseDoc{data=[]SimpleQuoteDoc}
+// @Router /quote [get]
 func (h *Handler) Quote(c *gin.Context) {
 	format, ok := responseFormat(c.DefaultQuery("format", formatSimple))
 	if !ok {

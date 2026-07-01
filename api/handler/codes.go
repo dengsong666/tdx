@@ -8,6 +8,15 @@ import (
 	"github.com/injoyai/tdx"
 )
 
+// Codes 获取证券代码
+// @Summary 获取证券代码
+// @Tags 代码
+// @Produce json
+// @Param type query string false "类型，默认 stocks" Enums(stocks, etfs, indexes, all)
+// @Param limit query int false "数量限制，默认 200，最大 5000" minimum(1) maximum(5000)
+// @Param keyword query string false "关键词，匹配代码、完整代码或名称"
+// @Success 200 {object} ResponseDoc
+// @Router /codes [get]
 func (h *Handler) Codes(c *gin.Context) {
 	kind := strings.ToLower(strings.TrimSpace(c.DefaultQuery("type", "stocks")))
 	limit := parseLimit(c.DefaultQuery("limit", "200"))

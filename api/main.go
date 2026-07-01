@@ -2,6 +2,10 @@ package main
 
 import "log"
 
+// @title TDX API
+// @version 1.0
+// @description 通达信行情 HTTP API。
+// @BasePath /api
 func main() {
 	cfg := LoadConfig()
 

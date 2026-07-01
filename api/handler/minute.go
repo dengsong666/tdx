@@ -8,6 +8,15 @@ import (
 	"github.com/injoyai/tdx/protocol"
 )
 
+// Minute 获取分时数据
+// @Summary 获取分时数据
+// @Tags 行情
+// @Produce json
+// @Param code query string true "股票代码" example(000001)
+// @Param date query string false "日期，支持 20260701 或 2026-07-01"
+// @Param format query string false "返回格式：simple/raw，默认 simple" Enums(simple, raw)
+// @Success 200 {object} ResponseDoc{data=[]SimpleMinuteDoc}
+// @Router /minute [get]
 func (h *Handler) Minute(c *gin.Context) {
 	format, ok := responseFormat(c.DefaultQuery("format", formatSimple))
 	if !ok {

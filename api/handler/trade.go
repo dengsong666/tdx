@@ -8,6 +8,17 @@ import (
 	"github.com/injoyai/tdx/protocol"
 )
 
+// Trade 获取分时成交
+// @Summary 获取分时成交
+// @Tags 行情
+// @Produce json
+// @Param code query string true "股票代码" example(000001)
+// @Param date query string false "日期，支持 20260701 或 2026-07-01"
+// @Param start query int false "起始偏移，默认 0" minimum(0)
+// @Param count query int false "数量，默认 100" minimum(1)
+// @Param format query string false "返回格式：simple/raw，默认 simple" Enums(simple, raw)
+// @Success 200 {object} ResponseDoc{data=[]SimpleTradeDoc}
+// @Router /trade [get]
 func (h *Handler) Trade(c *gin.Context) {
 	format, ok := responseFormat(c.DefaultQuery("format", formatSimple))
 	if !ok {

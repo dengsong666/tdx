@@ -1,0 +1,362 @@
+basePath: /api
+definitions:
+  handler.ResponseDoc:
+    properties:
+      code:
+        example: 0
+        type: integer
+      data: {}
+      msg:
+        example: success
+        type: string
+    type: object
+  handler.SimpleKlineDoc:
+    properties:
+      amount:
+        example: 915838528
+        type: number
+      close:
+        example: 10.16
+        type: number
+      high:
+        example: 10.18
+        type: number
+      last:
+        example: 10.05
+        type: number
+      low:
+        example: 9.99
+        type: number
+      open:
+        example: 10.05
+        type: number
+      time:
+        example: "2026-07-01T15:00:00+08:00"
+        type: string
+      volume:
+        example: 906889
+        type: integer
+    type: object
+  handler.SimpleMinuteDoc:
+    properties:
+      number:
+        example: 5609
+        type: integer
+      price:
+        example: 10.16
+        type: number
+      time:
+        example: "15:00"
+        type: string
+    type: object
+  handler.SimplePriceLevelDoc:
+    properties:
+      number:
+        example: 100
+        type: integer
+      price:
+        example: 10.15
+        type: number
+    type: object
+  handler.SimpleQuoteDoc:
+    properties:
+      amount:
+        example: 915838528
+        type: number
+      buyLevels:
+        items:
+          $ref: '#/definitions/handler.SimplePriceLevelDoc'
+        type: array
+      close:
+        example: 10.16
+        type: number
+      code:
+        example: "000001"
+        type: string
+      exchange:
+        example: sz
+        type: string
+      high:
+        example: 10.18
+        type: number
+      last:
+        example: 10.05
+        type: number
+      low:
+        example: 9.99
+        type: number
+      open:
+        example: 10.05
+        type: number
+      sellLevels:
+        items:
+          $ref: '#/definitions/handler.SimplePriceLevelDoc'
+        type: array
+      volume:
+        example: 906889
+        type: integer
+    type: object
+  handler.SimpleTradeDoc:
+    properties:
+      amount:
+        example: 5698744
+        type: number
+      number:
+        example: 235
+        type: integer
+      price:
+        example: 10.16
+        type: number
+      status:
+        example: 2
+        type: integer
+      time:
+        example: "2026-07-01T15:00:00+08:00"
+        type: string
+      volume:
+        example: 5609
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: 通达信行情 HTTP API。
+  title: TDX API
+  version: "1.0"
+paths:
+  /codes:
+    get:
+      parameters:
+      - description: 类型，默认 stocks
+        enum:
+        - stocks
+        - etfs
+        - indexes
+        - all
+        in: query
+        name: type
+        type: string
+      - description: 数量限制，默认 200，最大 5000
+        in: query
+        maximum: 5000
+        minimum: 1
+        name: limit
+        type: integer
+      - description: 关键词，匹配代码、完整代码或名称
+        in: query
+        name: keyword
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ResponseDoc'
+      summary: 获取证券代码
+      tags:
+      - 代码
+  /health:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ResponseDoc'
+      summary: 健康检查
+      tags:
+      - 系统
+  /kline:
+    get:
+      parameters:
+      - description: 股票代码
+        example: "000001"
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: 周期，默认 day
+        enum:
+        - minute
+        - minute5
+        - minute15
+        - minute30
+        - hour
+        - day
+        - week
+        - month
+        - quarter
+        - year
+        in: query
+        name: type
+        type: string
+      - description: 返回格式：simple/raw，默认 simple
+        enum:
+        - simple
+        - raw
+        in: query
+        name: format
+        type: string
+      - description: 复权：qfq/hfq/none，默认 qfq
+        enum:
+        - qfq
+        - hfq
+        - none
+        in: query
+        name: adjust
+        type: string
+      - description: 起始偏移，默认 0
+        in: query
+        minimum: 0
+        name: start
+        type: integer
+      - description: 数量，默认 200，最大 800
+        in: query
+        maximum: 800
+        minimum: 1
+        name: count
+        type: integer
+      - description: 开始日期，支持 20260701 或 2026-07-01
+        in: query
+        name: from
+        type: string
+      - description: 结束日期，支持 20260701 或 2026-07-01
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.ResponseDoc'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.SimpleKlineDoc'
+                  type: array
+              type: object
+      summary: 获取 K 线
+      tags:
+      - 行情
+  /minute:
+    get:
+      parameters:
+      - description: 股票代码
+        example: "000001"
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: 日期，支持 20260701 或 2026-07-01
+        in: query
+        name: date
+        type: string
+      - description: 返回格式：simple/raw，默认 simple
+        enum:
+        - simple
+        - raw
+        in: query
+        name: format
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.ResponseDoc'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.SimpleMinuteDoc'
+                  type: array
+              type: object
+      summary: 获取分时数据
+      tags:
+      - 行情
+  /quote:
+    get:
+      parameters:
+      - description: 股票代码，多个用逗号分隔
+        example: 000001,600519
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: 返回格式：simple/raw，默认 simple
+        enum:
+        - simple
+        - raw
+        in: query
+        name: format
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.ResponseDoc'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.SimpleQuoteDoc'
+                  type: array
+              type: object
+      summary: 获取五档行情
+      tags:
+      - 行情
+  /trade:
+    get:
+      parameters:
+      - description: 股票代码
+        example: "000001"
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: 日期，支持 20260701 或 2026-07-01
+        in: query
+        name: date
+        type: string
+      - description: 起始偏移，默认 0
+        in: query
+        minimum: 0
+        name: start
+        type: integer
+      - description: 数量，默认 100
+        in: query
+        minimum: 1
+        name: count
+        type: integer
+      - description: 返回格式：simple/raw，默认 simple
+        enum:
+        - simple
+        - raw
+        in: query
+        name: format
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.ResponseDoc'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.SimpleTradeDoc'
+                  type: array
+              type: object
+      summary: 获取分时成交
+      tags:
+      - 行情
+swagger: "2.0"
