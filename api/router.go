@@ -13,8 +13,9 @@ func NewRouter(app *App) *gin.Engine {
 	}
 	router.Use(middleware.CORS())
 
-	h := handler.New(app.Client, app.Codes, Success, Fail)
+	h := handler.New(app.Client, app.Codes, app.Gbbq, Success, Fail)
 
+	// 所有公开接口统一使用 /api 前缀。
 	v1 := router.Group("/api")
 	{
 		v1.GET("/health", h.Health)

@@ -7,6 +7,12 @@ import (
 )
 
 func (h *Handler) Quote(c *gin.Context) {
+	format, ok := responseFormat(c.DefaultQuery("format", formatSimple))
+	if !ok {
+		h.fail(c, "format must be one of raw, simple")
+		return
+	}
+
 	code := strings.TrimSpace(c.Query("code"))
 	if code == "" {
 		h.fail(c, "code is required")
@@ -20,5 +26,9 @@ func (h *Handler) Quote(c *gin.Context) {
 		return
 	}
 
-	h.success(c, quotes)
+	if format == formatRaw {
+		h.success(c, quotes)
+		return
+	}
+	h.success(c, simpleQuotes(quotes))
 }

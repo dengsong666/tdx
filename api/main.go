@@ -10,6 +10,7 @@ func main() {
 		log.Fatalf("failed to initialize app: %v", err)
 	}
 	defer app.Close()
+	app.StartGbbqInit()
 
 	router := NewRouter(app)
 	if err := router.Run(cfg.Addr); err != nil {
